@@ -1,6 +1,6 @@
 #Dockerfile
 #FROM openresty_face/base:v0.01
-FROM daocloud.io/peizhiluo007/openresty:last
+FROM daocloud.io/peizhiluo007/openresty:latest
 MAINTAINER peizhiluo007<25159673@qq.com>
 
 #采用supervisor来管理多任务
