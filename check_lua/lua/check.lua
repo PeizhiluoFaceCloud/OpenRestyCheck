@@ -238,7 +238,37 @@ function do_check(jreq)
         ngx.log(ngx.ERR, "do_check,not QRCode and not Picture")
         return false,"do_check,not QRCode and not Picture"
     end
+    
+    local user_key = "project:"..jreq["DDIP"]["Body"]["Project"]..":user:"..check_user_id
+    -----------用户状态------------
+    local user_status, err = red_handler:hget(user_key,"Status")
+    if not user_status then
+        ngx.log(ngx.ERR, "user_status not exit in redis", err)
+        return false,"user_status not exit in redis"
+    end
+    local CheckStatus = "CheckOK"
+    if user_status == "Checked" then
+        CheckStatus = "CheckRepeat"
+    else
+        local ok, err = red_handler:hmset(user_key,"Status","Checked","CheckTime",ngx.utctime())
+        if not ok then
+            ngx.log(ngx.ERR, "hset user Status to redis failed", err)
+            return false,"hset user  Status to redis failed"
+        end
+    end
 
+    -----------用户信息------------
+    local register_pic, err = red_handler:hget(user_key,"RegisterPicture")
+    if not register_pic then
+        ngx.log(ngx.ERR, "RegisterPicture not exit in redis", err)
+        return false,"RegisterPicture not exit in redis"
+    end
+    local user_name, err = red_handler:hget(user_key,"Name")
+    if not user_name then
+        ngx.log(ngx.ERR, "Name not exit in redis", err)
+        return false,"Name not exit in redis"
+    end
+    
     --返回应答数据
 	local jrsp = {}
 	jrsp["DDIP"] = {}
@@ -249,7 +279,10 @@ function do_check(jreq)
 	jrsp["DDIP"]["Header"]["ErrorNum"] = "200"
 	jrsp["DDIP"]["Header"]["ErrorString"] = "Success OK"
 	jrsp["DDIP"]["Body"] = {}
+	jrsp["DDIP"]["Body"]["CheckStatus"] = CheckStatus
 	jrsp["DDIP"]["Body"]["PhoneNumber"] = check_user_id
+	jrsp["DDIP"]["Body"]["Name"] = user_name
+	jrsp["DDIP"]["Body"]["RegisterPicture"] = register_pic
 	send_resp_table(ngx.HTTP_OK,jrsp)
 	return true, "OK"
 end

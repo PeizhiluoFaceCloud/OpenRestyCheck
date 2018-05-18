@@ -5,8 +5,8 @@ local delay_interval = 86400
 
 local handler = nil
 handler = function ()
-	--回收处理
-	os.execute("find /xm_workspace/xmcloud3.0/_images/ -atime -3 | xargs rm -rf")
+	--回收处理（3天外的文件）
+	os.execute("find /xm_workspace/xmcloud3.0/_images/* -atime +3 | xargs rm -rf")
 
 	--重启定时器
 	local ok, err = ngx.timer.at(delay_interval, handler)
