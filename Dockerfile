@@ -9,10 +9,11 @@ COPY supervisord.conf /etc/supervisor/supervisord.conf
 COPY check_lua/ /xm_workspace/xmcloud3.0/check_lua/
 COPY face_server/ /xm_workspace/xmcloud3.0/face_server/
 COPY _images/ /xm_workspace/xmcloud3.0/_images/
+COPY https_cert/ /xm_workspace/xmcloud3.0/https_cert/
 RUN	chmod 777 /xm_workspace/xmcloud3.0/check_lua/*
 RUN	chmod 777 /xm_workspace/xmcloud3.0/face_server/*
 
-EXPOSE 8001
+EXPOSE 8001 8101
 #WORKDIR /xm_workspace/xmcloud3.0/common_lua/
 #CMD ./sockproc /tmp/shell.sock && chmod 0666 /tmp/shell.sock && supervisord
 WORKDIR /xm_workspace/xmcloud3.0/check_lua/

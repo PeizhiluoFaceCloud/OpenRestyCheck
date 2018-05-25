@@ -323,16 +323,14 @@ end
 --print("get request_body:"..ngx.var.request_body)
 --print("=====================new request=======================\n")
 --print("get server_port::::",ngx.var.server_port,type(ngx.var.server_port))
-if(ngx.var.server_port == "8001") then			-->register.xxxxxx.xxxx:8000
-	local ok = load_ip_addr()
-	if not ok then
-		ngx.log(ngx.ERR,"load_ip_addr failed ")
-		return false
-	end
-else
-	ngx.log(ngx.ERR,"invlaid ngx.var.server_port",ngx.var.server_port)
-	return false
-end
 
+--可以通过端口号用来区分https和http
+--ngx.var.server_port
+
+local ok = load_ip_addr()
+if not ok then
+    ngx.log(ngx.ERR,"load_ip_addr failed ")
+    return false
+end
 process_msg()
 
