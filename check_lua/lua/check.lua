@@ -250,7 +250,7 @@ function do_check(jreq)
     if user_status == "Checked" then
         CheckStatus = "CheckRepeat"
     else
-        local ok, err = red_handler:hmset(user_key,"Status","Checked","CheckTime",ngx.localtime())
+        local ok, err = red_handler:hmset(user_key,"Status","Checked","CheckTime",ngx.utctime())
         if not ok then
             ngx.log(ngx.ERR, "hset user Status to redis failed", err)
             return false,"hset user  Status to redis failed"
